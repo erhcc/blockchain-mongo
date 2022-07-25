@@ -19,7 +19,7 @@ type ReqBlockChain struct{
 	Id int  		`json:"id"`
 }
 
-func PostJson(url string, contentBody interface{}) (string,error){
+func PostJson(url string, contentBody interface{}) ([]byte,error){
 
 	body,_:=json.Marshal(contentBody) 
 
@@ -34,25 +34,26 @@ func PostJson(url string, contentBody interface{}) (string,error){
 	defer resp.Body.Close()
 
 	//Check response code, if New user is created then read response.
-	if resp.StatusCode == http.StatusCreated {
-		body, err := ioutil.ReadAll(resp.Body)
+	//StatusCreated or ok
+	if resp.StatusCode == http.StatusOK {
+		resBody, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			//Failed to read response.
 			//panic(err)
-			return "",err
+			return nil,err
 		}
 
 		//Convert bytes to String and print
-		jsonStr := string(body)
+		//jsonStr := string(body)
 		//fmt.Println("Response: ", jsonStr)
-		return jsonStr,nil
+		return resBody,nil
 
 	} else {
 		//The status is not Created. print the error.
 		//errMsg :="status not correct"+resp.Status
 		errMsg :=fmt.Sprintf("Get failed with error: %s",resp.Status)
 		//fmt.Println(errMsg)
-		return "",errors.New(errMsg)
+		return nil,errors.New(errMsg)
 		
 	}
 
