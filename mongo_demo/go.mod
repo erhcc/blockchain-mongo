@@ -1,4 +1,4 @@
-module mongo_demo
+module github.com/erichuang-code/blockchain-mongo
 
 go 1.18
 
