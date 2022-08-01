@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	log "github.com/sirupsen/logrus"
+
 )
 
 func PostJson(url string, contentBody interface{}) ([]byte,error){
@@ -20,6 +22,7 @@ func PostJson(url string, contentBody interface{}) ([]byte,error){
 
 	// An error is returned if something goes wrong
 	if err != nil {
+		log.Printf("err is :%v",err)
 		panic(err)
 	}
 	//Need to close the response stream, once response is read.

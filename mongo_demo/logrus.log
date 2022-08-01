@@ -55,3 +55,5 @@ time="2022-07-27T10:13:14+07:00" level=info msg="apiTransactiondataResponse is {
 time="2022-07-27T10:13:14+07:00" level=info msg="transcation data saved\n" _source="server/main.go:128"
 time="2022-07-27T10:13:14+07:00" level=info msg="******done******" _source="server/main.go:88"
 time="2022-07-27T10:13:14+07:00" level=info msg="Ticker stopped" _source="server/main.go:96"
+[36mINFO[0m[2022-08-01T14:32:26+07:00] Tick at 2022-08-01 14:32:26.2988367 +0700 +07 m=+2.033492401  [36m_source[0m="server/main.go:123"
+[36mINFO[0m[2022-08-01T14:32:26+07:00] query block                                   [36m_source[0m="server/main.go:139"

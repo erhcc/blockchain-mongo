@@ -1,0 +1,7 @@
+[36mINFO[0m[2022-08-01T14:37:10+07:00] Tick at 2022-08-01 14:37:10.2242418 +0700 +07 m=+19.158195201  [36m_source[0m="server/main.go:123"
+[36mINFO[0m[2022-08-01T14:37:12+07:00] query block                                   [36m_source[0m="server/main.go:139"
+[36mINFO[0m[2022-08-01T14:39:40+07:00] Tick at 2022-08-01 14:39:40.030202 +0700 +07 m=+11.207947901  [36m_source[0m="server/main.go:123"
+[36mINFO[0m[2022-08-01T14:39:41+07:00] query block                                   [36m_source[0m="server/main.go:139"
+[36mINFO[0m[2022-08-01T14:42:41+07:00] Tick at 2022-08-01 14:42:41.3797652 +0700 +07 m=+6.797520901  [36m_source[0m="server/main.go:123"
+[36mINFO[0m[2022-08-01T14:42:43+07:00] query block                                   [36m_source[0m="server/main.go:139"
+[36mINFO[0m[2022-08-01T14:42:57+07:00] err is :Post "http://localhost:8080/blockdata": dial tcp [::1]:8080: connectex: No connection could be made because the target machine actively refused it.  [36m_source[0m="http/api.go:25"

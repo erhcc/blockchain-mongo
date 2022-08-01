@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	_ "os"
+	"os"
 
 	//"log"
 	"time"
@@ -61,7 +61,7 @@ func setupViper()  {
 	viper.SetConfigType("json") 
 	viper.AddConfigPath("config/")   // path to look for the config file in
 	// viper.AddConfigPath("$HOME/.appname")  // call multiple times to add many search paths
-	// viper.AddConfigPath(".")               // optionally look for config in the working directory
+	viper.AddConfigPath(".")               // optionally look for config in the working directory
 	viper.AutomaticEnv()
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil { // Handle errors reading the config file
@@ -96,13 +96,13 @@ func setupLogger()  {
 	//formatter.TimestampFormat
 
 	  // You could set this to any `io.Writer` such as a file
-//   file, err := os.OpenFile("logrus.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-//   if err == nil {
-//    //log.Out = file
-//    log.SetOutput(file)
-//   } else {
-//    log.Info("Failed to log to file, using default stderr")
-//   }
+  file, err := os.OpenFile("logrus.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+  if err == nil {
+   //log.Out = file
+   log.SetOutput(file)
+  } else {
+   log.Info("Failed to log to file, using default stderr")
+  }
 
 }
 
@@ -132,10 +132,12 @@ func main(){
     done <- true
     log.Println("Ticker stopped")
 
-	
+	fmt.Scanln()
 }
 
 func handleBlockAndTransactionData(){
+	log.Printf("query block\n")
+
 	resJsonByteArrayBlock,err:=queryBlock()
 	//var user models.User
 	if err==nil {
@@ -170,6 +172,8 @@ func handleBlockAndTransactionData(){
 		// }
 
 
+	}else{
+		log.Printf("err:%v",err)
 	}
 }
 
@@ -194,7 +198,7 @@ func queryBlock()([]byte,error){
 	resultByteArray,err:=http.PostJson(urlApiBlock,contentBody)
 
 	if err!=nil {
-		fmt.Println(err)
+		log.Printf("err is: %v",err)
 		return nil,err
 	}else{
 		return resultByteArray,nil
