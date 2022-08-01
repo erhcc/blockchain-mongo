@@ -9,18 +9,11 @@ import (
 	"net/http"
 )
 
-/*
-{"jsonrpc":"2.0","method":"eth_getBlockByNumber","params": ["0x5BAD55",false],"id":1}
-*/
-type ReqBlockChain struct{
-	Jsonrpc string  	`json:"jsonrpc"`
-	Method string  	`json:"method"`
-	Params []interface{}	`json:"params"`
-	Id int  		`json:"id"`
-}
-
 func PostJson(url string, contentBody interface{}) ([]byte,error){
 
+	//fmt.s
+	//_ :=fmt.Sprintf("Get failed with error: %s",url)
+	
 	body,_:=json.Marshal(contentBody) 
 
 	resp, err := http.Post(url,"application/json",bytes.NewBuffer(body))
