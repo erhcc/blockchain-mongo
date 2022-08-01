@@ -173,7 +173,7 @@ func handleBlockAndTransactionData(){
 
 
 	}else{
-		log.Printf("err:%v",err)
+		log.Printf("err:%v",err)//test source tree
 	}
 }
 
