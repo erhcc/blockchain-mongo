@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	//"time"
 
-	//"time"
-
 	//"errors"
 	//"fmt"
 	"io/ioutil"
@@ -19,40 +17,19 @@ import (
 
 func PostJson(url string, contentBody interface{}) ([]byte,error){
 
-
-	// defer func ()([]byte,error) {
-	// 	if r:=recover();r!=nil{
-	// 		log.Warnf("recovered, details is %v",r)
-	// 		return nil,nil	
-	// 	}
-
-	// }()
-
-	defer func () {
-		if r:=recover();r!=nil{
-			log.Warnf("recovered, details is %v",r)
-		}
-	}()
-
 	//fmt.s
 	//_ :=fmt.Sprintf("Get failed with error: %s",url)
 	
 	body,_:=json.Marshal(contentBody) 
 
-	//resp, err := http.Post(url,"application/json",bytes.NewBuffer(body))
-
-	//resp, err := utils.DoHttpReq(url,time.Second*10,nil,bytes.NewBuffer(body))
-
-	//this is used for thirdparty. it could be working for 1000 
-	//httpClient:=utils.GetClient(time.Second*60)//utils.GetClient(time.Second*10) utils.ClientSingleton
 	resp, err := http.Post(url,"application/json",bytes.NewBuffer(body))
+	//resp, err := utils.DoHttpReq(url,time.Second*10,nil,bytes.NewBuffer(body))
+	//httpClient:=utils.GetClient(timeout.Second*10)
 
 	// An error is returned if something goes wrong
 	if err != nil {
-		log.Printf("contentbody:%+v,err is :%v",string(body),err)
-		//panic(err)
-		//resp.Body.Close()
-		return nil,err
+		log.Printf("err is :%v",err)
+		panic(err)
 	}
 	//Need to close the response stream, once response is read.
 	//Hence defer close. It will automatically take care of it.

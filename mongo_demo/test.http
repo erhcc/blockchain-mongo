@@ -1,1 +1,47 @@
+Get https://api.chainbase.online/v1/block/detail?chain_id=1&number=13992202
+X-API-KEY: 2CmZgWWfE2KjJmDA8kkHVSTbWOl
+Content-Type: application/json
+
+###
 POST http://localhost:8080/blockdata
+
+###eth_getBlockByNumber
+POST https://bsc-mainnet.s.chainbase.online/v1/2CmZgWWfE2KjJmDA8kkHVSTbWOl 
+Content-Type: application/json
+
+{"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["0xd401a4", true],"id":233}
+
+
+###eth_getBlockByNumber int
+POST https://bsc-mainnet.s.chainbase.online/v1/2CmZgWWfE2KjJmDA8kkHVSTbWOl 
+Content-Type: application/json
+
+{"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["0x3e8", true],"id":233}
+
+
+###eth_getBlockByNumber custom
+POST http://45.77.174.52:8545/ 
+Content-Type: application/json
+
+{"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["0x3e8", true],"id":233}
+
+
+###eth_getTransactionByHash
+POST https://bsc-mainnet.s.chainbase.online/v1/2CmZgWWfE2KjJmDA8kkHVSTbWOl 
+Content-Type: application/json
+
+{"jsonrpc":"2.0","method":"eth_getTransactionByHash",
+"params":["0xbaf8ffa0b475a67cfeac3992d24422804452f0982e4e21a8816db2e0c9e5f224"],"id":233}
+
+###
+POST https://bsc-mainnet.s.chainbase.online/v1/2CmZgWWfE2KjJmDA8kkHVSTbWOl 
+Content-Type: application/json
+
+{"jsonrpc":"2.0","method":"eth_getTransactionByHash",
+"params":["0xccb9bdb5e9819b8716131e5f551da57cc62bb835baa80d872cc2a3abe0a747c5",
+      "0x08a280afe425d78534b69df1786855b9381f31bf3202299ad1d6072a4b6c9cd1"],"id":233}
+
+###gin
+
+POST https://bsc-mainnet.s.chainbase.online/v1/2CmZgWWfE2KjJmDA8kkHVSTbWOl 
+Content-Type: application/json

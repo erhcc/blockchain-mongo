@@ -177,9 +177,14 @@ func main(){
 func completeTask(text string) error{
 	//bson.D{{"foo", "bar"}, {"hello", "world"}, {"pi", 3.14159}}
 	filter:=bson.D{primitive.E{Key:"text",Value: text}}//filter
+	//filter1:=bson.D{bson.E{Key:"text",Value: text}}//filter
+
+	//filter2:=bson.D{{"text",text}}
 
 	update:=bson.D{
-		primitive.E{Key: "$set",Value: bson.D{//set
+		primitive.E{
+			Key: "$set",
+			Value: bson.D{//set
 			primitive.E{Key: "completed",Value: true},
 		}},
 	}

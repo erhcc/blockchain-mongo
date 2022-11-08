@@ -4,20 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	//"strconv"
-
-	//"os"
-	"sync"
+	"os"
 
 	//"os"
 
 	//"log"
-	//"time"
+	"time"
 
 	"github.com/erichuang-code/blockchain-mongo/models"
 	"github.com/erichuang-code/blockchain-mongo/req/http"
-
-	//"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -37,16 +32,11 @@ import (
 var collection *mongo.Collection
 var ctx=context.TODO()
 
-var errBlock=[]int{}//make([]int, 1024)
-
 func initDb(){
 
-	//url:=viper.GetString("mongodb.url")
-	//log.Println(url) 1qaz%40WSX
-	//clientOptions:=options.Client().ApplyURI("mongodb+srv://rootuser:1qaz%40WSX@cluster0.xoxrl.mongodb.net/test")//mongodb://localhost:27017/ mongodb+srv://rootuser:<password>@cluster0.xoxrl.mongodb.net/test cluster0.xoxrl.mongodb.net:27017
-	
-	clientOptions:=options.Client().ApplyURI("mongodb://localhost:27017/")
-	
+	url:=viper.GetString("mongodb.url")
+	//log.Println(url)
+	clientOptions:=options.Client().ApplyURI(url)//mongodb://localhost:27017/
 	client,err:=mongo.Connect(ctx,clientOptions)
 	if err!=nil {
 		log.Fatal(err)
@@ -58,31 +48,6 @@ func initDb(){
 	}
 
 	collection=client.Database("local").Collection("test1")
-
-
-	//collection.Indexes().CreateOne()
-
-//	client.Database("local").CreateCollection(ctx,"test1")
-// 	collection=client.Database("local").Collection("test1")
-// 	/*
-// 	// Declare an index model object to pass to CreateOne()
-// 	// db.members.createIndex( { "SOME_FIELD": 1 }, { unique: true } )
-// 		mod := mongo.IndexModel{
-// 		Keys: bson.M{
-// 		"Some Field": 1, // index in ascending order
-// 		}, Options: nil,
-// }
-
-// 		// Create an Index using the CreateOne() method
-// 		ind, err := col.Indexes().CreateOne(ctx, mod)
-// 	*/
-// 	mod:=mongo.IndexModel{
-// 		Keys:bson.M{
-// 			"blockNumber":0,
-// 		},Options: nil,
-// 		}
-	
-// 	collection.Indexes().CreateOne(ctx,mod)
 	//insertMany()
 }
 
@@ -133,162 +98,44 @@ func setupLogger()  {
 	//formatter.TimestampFormat
 
 	  // You could set this to any `io.Writer` such as a file
-//   file, err := os.OpenFile("logrus.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-//   if err == nil {
-//    //log.Out = file
-//    log.SetOutput(file)
-//   } else {
-//    log.Info("Failed to log to file, using default stderr")
-//   }
+  file, err := os.OpenFile("logrus.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+  if err == nil {
+   //log.Out = file
+   log.SetOutput(file)
+  } else {
+   log.Info("Failed to log to file, using default stderr")
+  }
 
 }
-
-var wg sync.WaitGroup
 
 func main(){
 
 	setupLogger()
 	setupViper()
-	initDb()
 
-	var i uint
+    ticker := time.NewTicker(2000 * time.Millisecond)
+    done := make(chan bool)
 
-	//5000 is ok for our node
-	//500 for thirdparty: limitation 
-	//An existing connection was forcibly closed by the remote host
-	for i = 0; i < 600; i++ {
-		//query block
-		wg.Add(1)
-		go queryAndSaveBlockData(i)
+    go func() {
+        for {
+            select {
+            case <-done:
+                return
+            case t := <-ticker.C:
+                log.Println("Tick at", t)
+				handleBlockAndTransactionData()
+				log.Println("******done******")
+            }
+        }
+    }()
 
-	}
+    time.Sleep(6600 * time.Millisecond)
+    ticker.Stop()
+    done <- true
+    log.Println("Ticker stopped")
 
-	// for i = 20769681; i > 20769581; i-- {
-	// 	//query block
-	// 	wg.Add(1)
-	// 	go queryAndSaveBlockData(i)
-
-	// }
-
-	log.Infof("waiting to done\n")
-	wg.Wait()
-	log.Infof("all done\n")
-
-	log.Warnf("len is d%,val is:",len(errBlock),errBlock)
-    // ticker := time.NewTicker(2000 * time.Millisecond)
-    // done := make(chan bool)
-
-    // go func() {
-    //     for {
-    //         select {
-    //         case <-done:
-    //             return
-    //         case t := <-ticker.C:
-    //             log.Println("Tick at", t)
-	// 			handleBlockAndTransactionData()
-	// 			log.Println("******done******")
-    //         }
-    //     }
-    // }()
-
-    // time.Sleep(6600 * time.Millisecond)
-    // ticker.Stop()
-    // done <- true
-    // log.Println("Ticker stopped")
-
-	//fmt.Scanln()
+	fmt.Scanln()
 }
-
-/*
-###eth_getBlockByNumber int
-POST https://bsc-mainnet.s.chainbase.online/v1/2CmZgWWfE2KjJmDA8kkHVSTbWOl 
-Content-Type: application/json
-
-{"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["1", true],"id":233}
-*/
-func queryBlockByNumber(blockNumber uint)([]byte,error){
-
-	// temp:=fmt.Sprintf("0x%x",blockNumber)
-	// log.Println(temp)
-
-	contentBody:=models.ApiBlockRequest{
-		Jsonrpc: "2.0",
-		Method: "eth_getBlockByNumber",
-		Params: []interface{}{fmt.Sprintf("0x%x",blockNumber),true},
-		Id: 233,//todo later
-	}
-
-	//http://45.77.174.52:8545/ https://bsc-mainnet.s.chainbase.online/v1/2CmZgWWfE2KjJmDA8kkHVSTbWOl
-	resultByteArray,err:=http.PostJson("https://bsc-mainnet.s.chainbase.online/v1/2CmZgWWfE2KjJmDA8kkHVSTbWOl",contentBody)
-
-	if err!=nil {
-		log.Errorf("http request err is: %v",err)
-		return nil,err
-	}else{
-		return resultByteArray,nil
-	}
-
-}
-
-func queryAndSaveBlockData(blockNumber uint){
-
-	defer wg.Done()
-	//log.Printf("query block\n")
-
-	// defer func ()  {
-	// 	if r:=recover();r!=nil{
-	// 		log.Errorf("recovered %s in queryAndSaveBlockData:%+v",blockNumber,r)
-	// 	}
-	// }()
-
-
-	resJsonByteArrayBlock,err:=queryBlockByNumber(blockNumber)
-	//var user models.User
-	if err==nil {
-
-		//log.Errorf("blocknum %d,first log err :%v\n",blockNumber,err)
-
-		//json.Unmarshal(model,&user)
-		var apiBlockdataResponse models.ApiBlockdataFullResponseWithHeader
-		errjsonUnmarshal:=json.Unmarshal(resJsonByteArrayBlock,&apiBlockdataResponse)
-
-		//log.Errorf("blocknum %d,err in errjsonUnmarshal:%v\n",blockNumber,errjsonUnmarshal)
-
-		if(errjsonUnmarshal!=nil){
-			log.Errorf("blocknum %d,err in errjsonUnmarshal:%v\n",blockNumber,errjsonUnmarshal)
-			errBlock=append(errBlock, int(blockNumber))
-			return
-
-		}
-
-		//log.Printf("apiBlockdataResponse is %s\n",string(resJsonByteArrayBlock))
-		//save in mongoDB
-
-
-		//apiBlockdataResponse.Result.ID=strconv.FormatUint(uint64(blockNumber),10)//fmt.Sprintf("%s",blockNumber)
-		apiBlockdataResponse.Result.ID=blockNumber
-		res,errInsert:=collection.InsertOne(ctx,apiBlockdataResponse.Result)
-		if(errInsert!=nil){
-			log.Printf("err in mongodb:res %v,%v",res,errInsert)
-			errBlock=append(errBlock, int(blockNumber))
-
-			return
-		}
-		//log.Printf("block data %s saved into mongo %s\n",blockNumber,res.InsertedID)
-
-		// //query each
-		// for _,txid:=range transactions{
-
-		// }
-
-	}else{
-		errBlock=append(errBlock, int(blockNumber))
-		log.Printf("blocknumber %d,err:%v",blockNumber,err)//test source tree
-	}
-
-}
-
-
 
 func handleApiData(){
 

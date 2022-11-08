@@ -1,4 +1,7 @@
 package models
+
+//import "go.mongodb.org/mongo-driver/bson/primitive"
+
 /*
 {
 "id":1,
@@ -66,7 +69,7 @@ type ApiTransactiondataResponse struct{
 */
 
 type ApiBlock struct{
-	Number     string `number:"hash"`
+	Number     string `json:"number"`
 	Hash     string `json:"hash"`
 	ParentHash     string `json:"parentHash"`
 	Nonce    string `json:"nonce"`
@@ -88,6 +91,30 @@ type ApiBlock struct{
 	Uncles     []string `json:"uncles"`
 }
 
+type ApiBlockWithFullTran struct{
+	ID     uint `bson:"_id"`//string `json:"_id"`
+	Number     string `json:"number"`
+	Hash     string `json:"hash"`
+	ParentHash     string `json:"parentHash"`
+	Nonce    string `json:"nonce"`
+	Sha3Uncles    string `json:"sha3Uncles"`
+	LogsBloom    string `json:"logsBloom"`
+	TransactionsRoot    string `json:"transactionsRoot"`
+	MixHash    string `json:"mixHash"`
+	ReceiptsRoot    string `json:"receiptsRoot"`
+	StateRoot    string `json:"stateRoot"`
+	Miner    string `json:"miner"`
+	Difficulty    string `json:"difficulty"`
+	TotalDifficulty    string `json:"totalDifficulty"`
+	ExtraData    string `json:"extraData"`
+	Size    string `json:"size"`
+	GasLimit string `json:"gasLimit"`
+	GasUsed string `json:"gasUsed"`
+	Timestamp  string   `json:"timestamp"`
+	Transactions     []ApiTransaction `json:"transactions"`
+	Uncles     []string `json:"uncles"`
+}
+
 /* eth_getBlockByNumber
 */
 type ApiBlockdataResponse struct{
@@ -95,4 +122,16 @@ type ApiBlockdataResponse struct{
 	Jsonrpc    string `json:"jsonrpc"`
 	Result	ApiBlock `json:"result"`
 }
+
+type ApiBlockdataFullResponseWithHeader struct{
+	Id     int `json:"id"`
+	Jsonrpc    string `json:"jsonrpc"`
+	Result	ApiBlockWithFullTran `json:"result"`
+}
+
+type ApiBlockdataFullResponse struct{
+
+	Result	ApiBlockWithFullTran `json:"result"`
+}
+
 
